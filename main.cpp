@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cctype>
 using namespace std;
 
 //prints in format whatever table (NFA/DFA) is passed to it, with a vector of states also passed
@@ -19,6 +20,33 @@ void PrintTable(vector<vector<vector<string>>> table, vector<string> states){
         }
 }
 
+vector<string> DFAStates(vector<vector<vector<string>>> table, vector<string> states){
+	vector<string> DFAStates;
+	
+	DFAStates.push_back(states[0]);
+
+	for(int i=0; i<table.size(); i++){
+		for(int j=0; j<table[i].size(); j++){
+			string tempState;
+			if(table[i][j].size()>1){
+				for(int k=0; k<table[i][j].size(); k++)
+				{
+					if(table[i][j][k] != "-")
+						tempState = tempState + table[i][j][k];		
+				}
+				DFAStates.push_back(tempState);
+			}
+			
+		}
+	}
+
+	cout << "DFA STATES\n";
+    for(int i=0; i<DFAStates.size(); i++)
+			cout << DFAStates[i]<< endl;
+
+	return DFAStates;
+}
+
 
 int main(){
 	//declarations of variables
@@ -26,6 +54,7 @@ int main(){
     string state, outputState;
     vector<vector<vector<string>>> table;
     vector<string> states;
+
 
 	//enter states present on left side of NFA table
     cout << "Enter the total number of states of the NFA: ";
@@ -63,6 +92,10 @@ int main(){
 	//nfa table printing
 	cout << "\n\nNFA Table\n";
 	PrintTable(table, states);
+
+	//Creating list of DFA states
+	vector<string> DFAStateList;
+	DFAStateList= DFAStates(table, states);
 
 	return 0;
 }
