@@ -3,6 +3,8 @@
 #include<queue>
 #include<set>
 #include<iterator>
+#include <string>
+#include <algorithm>
 using namespace std;
 
 
@@ -128,6 +130,20 @@ void printDFA(vector<vector<vector<string>>> table, vector<string> DFAStates, in
 		cout << endl;
 	}
 }*/
+void printNFA(vector<vector<vector<int>>> table){
+
+};
+
+void printDFA(vector<vector<int>>, vector<vector<vector<int>>> table){
+
+};
+
+vector<int> conversion(int x,vector<vector<vector<int> > > table){
+	vector<int> dfaTable;
+	queue<int> queue;
+	
+	return dfaTable;
+}
 
 int main() {
 
