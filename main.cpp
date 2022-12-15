@@ -1,11 +1,13 @@
-#include <iostream>
-#include <vector>
-#include <string>
-#include <cctype>
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<set>
+#include<iterator>
 using namespace std;
 
+
 //prints in format whatever table (NFA/DFA) is passed to it, with a vector of states also passed
-void PrintTable(vector<vector<vector<string>>> table, vector<string> states, int alphabetN, string alphabet){
+/*void PrintTable(vector<vector<vector<string>>> table, vector<string> states, int alphabetN, string alphabet) {
 	cout << "States\t\t";
 	for (int i = 0; i < alphabetN; i++)
 	{
@@ -59,12 +61,41 @@ vector<string> DFAStates(vector<vector<vector<string>>> table, vector<string> st
 		}
 	}
 
+	for (int i = 0; i < DFAStates.size(); i++)
+	{
+		if (DFAStates.at(i).length() > 1) //for all DFA states with more than 1 character, AB, BC, CD, etc.
+		{
+			string tempState;
+			for (int j = 0; j < DFAStates.at(i).size(); j++) //for every character in those states
+			{
+				for (int k = 0; k < states.size(); k++) //for every state from NFA
+				{
+					if (DFAStates.at(i).at(j) == states.at(k).at(0)) //If a character matches a state from NFA
+					{
+						for (int l = 0; l < table.at(k).size(); l++)
+						{
+							for (int m = 0; m < table.at(k).at(l).size(); m++)
+							{
+								tempState = tempState + table[k][l][m];
+								cout << tempState;
+							}
+							DFAStates.push_back(tempState);
+						}
+					}
+				}
+			}
+		}
+	}
+
 	cout << "DFA STATES\n";
     for(int i=0; i<DFAStates.size(); i++)
 			cout << DFAStates[i]<< endl;
 
 	return DFAStates;
 }
+
+
+
 
 void printDFA(vector<vector<vector<string>>> table, vector<string> DFAStates, int alphabetN, string alphabet)
 {
@@ -96,63 +127,101 @@ void printDFA(vector<vector<vector<string>>> table, vector<string> DFAStates, in
 		}
 		cout << endl;
 	}
-}
+}*/
 
-int main(){
-	//declarations of variables
-	int i, j, k, stateN, outputStateN, alphabetN;
-    string state, outputState;
-    vector<vector<vector<string>>> table;
-    vector<string> states;
-	string alphabet = "abcdefghijklmnopqrstuvwxyz";
-	string capsbet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+int main() {
 
-
-	//enter states present on left side of NFA table
-    cout << "Enter the total number of states in the NFA (Max=26): ";
-    cin >> stateN;
-
-	cout << "Enter the total number of elements in the alphabet (Max=26): ";
+	int statesN, alphabetN; //number of states, number of members in alphabet
+	cout << "Enter the total number of states in the NFA: ";
+	cin >> statesN;
+	cout << "Enter number of members in alphabet: ";
 	cin >> alphabetN;
+	vector<vector<vector<int>>> nfaTable;
 
-	//for loop for state rows, but states are not inputed in table but they are inputed in the states vector
-    for(i = 0; i < stateN; i++){
-		cout << endl;
-		//cout << "Enter state " << i+1 << "'s letter (one uppercase letter): ";
-		state = capsbet.at(i);
-		states.push_back(state);
-		vector<vector<string>> temp1;
+	for (int i = 0; i < statesN; i++)  //for each state in the NFA
+	{
+		cout << "For state " << i << endl;
+		vector<vector<int>> temp1;
+		char currChar = 'a';//curr input letter
+		int output, numOutputs;
 
-		//for loop for inputs of table
-		for(j = 0; j < alphabetN; j++){
-			vector<string> temp2;
-			cout << "Enter the # of output states for input "<< alphabet.at(j) << " of state " << state << ": ";
-			cin >> outputStateN;
-			cout << "Enter the output states for input " << alphabet.at(j) << " of state " << state << " (if there are no output states, type '-'): \n";
-
-			if(outputStateN == 0){
-					outputStateN+=1;
+		for (int j = 0; j < alphabetN; j++) //for each member in the alphabet
+		{
+			vector<int> temp2;
+			cout << "Enter number of output states for input " << currChar++ << ": ";
+			cin >> numOutputs;
+			cout << "Enter output states: " << endl;
+			for (int k = 0; k < numOutputs; k++) 
+			{
+				cin >> output;
+				temp2.push_back(output);
 			}
-
-			//for loop for the output state(s) of inputs
-			for(k=0;k<outputStateN;k++){
-				cin >> outputState;
-				temp2.push_back(outputState);
-			}
-				temp1.push_back(temp2);
+			temp1.push_back(temp2);
 		}
-		table.push_back(temp1);
+
+		vector<int> temp2;
+		cout << "Enter number of output states for the empty transition: ";
+		cin >> numOutputs;
+		cout << "Enter output states :" << endl;
+
+		for (int k = 0; k < numOutputs; k++) 
+		{
+			cin >> output;
+			temp2.push_back(output);
+		}
+
+		temp1.push_back(temp2);
+		nfaTable.push_back(temp1);
 	}
 
-	//nfa table printing
-	cout << "\n\nNFA Table\n";
-	PrintTable(table, states, alphabetN, alphabet);
+	printNFA(nfaTable);
 
-	//Creating list of DFA states
-	vector<string> DFAStateList;
-	DFAStateList = DFAStates(table, states, capsbet);
+	vector<vector<vector<int>>> dfaTable;
+	vector<vector<int>> states;
+	states.push_back(conversion(0, nfaTable));
 
-	printDFA(table, DFAStateList, alphabetN, alphabet);
+	queue<vector<int>> queue;
+	queue.push(states[0]);
 
-	return 0;
+	while (!queue.empty()) {
+		vector<int> front = queue.front();
+		queue.pop();
+
+		vector<vector<int> > temp2;
+		for (int i = 0; i < alphabetN; i++)
+		{
+			vector<int> temp1;
+			set<int> sortedSet;
+			for (int j = 0; j < front.size(); j++) 
+			{
+
+				for (int k = 0; k < nfaTable[front[j]][i].size(); k++) 
+				{
+					vector<int> conv = conversion(nfaTable[front[j]][i][k], nfaTable);
+
+					for (int l = 0; l < conv.size(); l++) {
+						if (sortedSet.find(conv[l]) == sortedSet.end())
+							sortedSet.insert(conv[l]);
+					}
+				}
+			}
+
+			for (set<int>::iterator m = sortedSet.begin(); m != sortedSet.end(); m++)
+			{
+				temp1.push_back(*m);
+			}
+
+			temp2.push_back(temp1);
+
+			if (find(states.begin(), states.end(), temp1) == states.end())
+			{
+				states.push_back(temp1);
+				queue.push(temp1);
+			}
+		}
+
+		dfaTable.push_back(temp2);
+	}
+
+	printDFA(states, dfaTable);
 }
