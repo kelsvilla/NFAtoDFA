@@ -7,135 +7,66 @@
 #include <algorithm>
 using namespace std;
 
-
-//prints in format whatever table (NFA/DFA) is passed to it, with a vector of states also passed
-/*void PrintTable(vector<vector<vector<string>>> table, vector<string> states, int alphabetN, string alphabet) {
-	cout << "States\t\t";
-	for (int i = 0; i < alphabetN; i++)
-	{
-		cout << "|" << alphabet.at(i) << "\t";
+void printNFA(vector<vector<vector<int>>> nfaTable){
+	cout<<"States\t\t"; //printing column labels
+	char input='a';
+	for(int i=0;i<nfaTable[0].size()-1;i++){
+		cout<<"|"<<input<< "\t";
+		input = input + 1;
 	}
-    cout << "\n--------------------------------\n";
-    for(int i = 0; i < table.size(); i++){
-            cout << states[i] << "\t";
-            for(int j = 0; j < table[i].size(); j++){
-                    cout << "\t|";
-                    for(int k = 0; k < table[i][j].size(); k++){
-						if (k != 0)
-							cout << ", ";
-						cout << table[i][j][k];
-                    }
-            }
-            cout << endl;
-    }
+	cout<<"|e"<<endl;
+	cout << "----------------";
+	for(int i=0;i<nfaTable[0].size();i++){
+	    cout << "--------";
+	}
 	cout << endl;
-}
-
-vector<string> DFAStates(vector<vector<vector<string>>> table, vector<string> states, string capsbet){
-	vector<string> DFAStates;
-	bool added = false;
-	DFAStates.push_back(states[0]);
-
-	for(int i=0; i<table.size(); i++){
-		for(int j=0; j<table[i].size(); j++){
-			string tempState;
-			if(table[i][j].size() >= 1){
-				for(int k=0; k<table[i][j].size(); k++)
-				{
-					if (table[i][j][k] != "-")
-						tempState = tempState + table[i][j][k];
-					else
-						tempState = capsbet.at(table.size());
-				}
-				added = false;
-				for (int l = 0; l < DFAStates.size(); l++)
-				{
-					if (DFAStates.at(l) == tempState)
-					{
-						added = true;
-					}
-				}
-				if (!added)
-				{
-					DFAStates.push_back(tempState);
+	for(int i=0;i<nfaTable.size();i++){ // iterating through nfaTable and print the 3d vector with formatting
+		cout << i << "\t";
+		for(int j=0;j<nfaTable[i].size();j++){
+			cout<<"\t|";
+			for(int k=0;k<nfaTable[i][j].size();k++){ 
+				cout<<nfaTable[i][j][k];
+				if(k != nfaTable[i][j].size()-1){
+				    cout << ","; 
 				}
 			}
 		}
+		cout<<endl;
 	}
-
-	for (int i = 0; i < DFAStates.size(); i++)
-	{
-		if (DFAStates.at(i).length() > 1) //for all DFA states with more than 1 character, AB, BC, CD, etc.
-		{
-			string tempState;
-			for (int j = 0; j < DFAStates.at(i).size(); j++) //for every character in those states
-			{
-				for (int k = 0; k < states.size(); k++) //for every state from NFA
-				{
-					if (DFAStates.at(i).at(j) == states.at(k).at(0)) //If a character matches a state from NFA
-					{
-						for (int l = 0; l < table.at(k).size(); l++)
-						{
-							for (int m = 0; m < table.at(k).at(l).size(); m++)
-							{
-								tempState = tempState + table[k][l][m];
-								cout << tempState;
-							}
-							DFAStates.push_back(tempState);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	cout << "DFA STATES\n";
-    for(int i=0; i<DFAStates.size(); i++)
-			cout << DFAStates[i]<< endl;
-
-	return DFAStates;
-}
-
-
-
-
-void printDFA(vector<vector<vector<string>>> table, vector<string> DFAStates, int alphabetN, string alphabet)
-{
-	cout << "States\t\t";
-	for (int i = 0; i < alphabetN; i++)
-	{
-		cout << "|" << alphabet.at(i) << "\t";
-	}
-	cout << "\n--------------------------------\n";
-	for (int i = 0; i < DFAStates.size(); i++)
-	{
-		cout << DFAStates.at(i) << "\t\t|";
-		for (int j = 0; j < DFAStates.at(i).length(); j++)
-		{
-			for (int k = 0; k < table.size(); k++)
-			{
-				for (int l = 0; l < table.at(k).size(); l++)
-				{
-					for (int m = 0; m < table.at(k).at(l).size(); m++)
-					{
-						for (int n = 0; n < table.at(k).at(l).at(m).size(); n++)
-						if (DFAStates.at(i).at(j) == table.at(k).at(l).at(m).at(n))
-						{
-							
-						}
-					}
-				}
-			}
-		}
-		cout << endl;
-	}
-}*/
-void printNFA(vector<vector<vector<int>>> table){
 
 };
 
-void printDFA(vector<vector<int>>, vector<vector<vector<int>>> table){
-
+void printDFA(vector<vector<int>>states, vector<vector<vector<int>>> dfaTable){
+	cout<<"States\t\t"; //printing the column labels
+	char input='a';
+	for(int i=0;i<dfaTable[0].size();i++){
+		cout<<"|"<<input<<"\t";
+		input = input + 1;
+	}
+	cout << "\n----------------";
+	for(int i=0;i<dfaTable[0].size();i++){
+	    cout << "--------";
+	}
+	cout << endl;
+	for(int i=0;i<states.size();i++){ //if a state is empty, print -, other wise iterate through and print each vector inside vector states
+		for(int j=0;j<states[i].size();j++)
+			cout<<states[i][j];
+		if(states[i].empty()){
+			cout<<"- ";
+		}
+		cout << "\t";
+		for(int p=0;p<dfaTable[i].size();p++){//iterating through the dfaTable and printing with format, if outcome states are empty, print -
+			cout<<"\t|";
+			for(int k=0;k<dfaTable[i][p].size();k++){
+				cout<<dfaTable[i][p][k];
+				
+			}
+			if(dfaTable[i][p].empty()){
+				cout<<"- ";
+			}
+		}
+		cout<<endl;
+	}
 };
 
 vector<int> conversion(int x,vector<vector<vector<int> > > table){
@@ -146,7 +77,7 @@ vector<int> conversion(int x,vector<vector<vector<int> > > table){
 
 	for(int i=0; i<table[x][table[x].size()-1].size(); i++) //for every spot in the passed table, add the value to the queue
 		queue.push(dfaTable[i]);
-	
+
 	while(queue.size() != 0){ //While the queue is not empty, check to see if the table in the given spot is empty. If it is not, traverse the queue and find this table value in the table.
 								// If it is the end of the table, push value into the table. Then push value into the queue
 		int z = queue.front();
@@ -172,6 +103,7 @@ int main() {
 	cin >> statesN;
 	cout << "Enter number of members in alphabet: ";
 	cin >> alphabetN;
+	cout << endl;
 	vector<vector<vector<int>>> nfaTable;
 
 	for (int i = 0; i < statesN; i++)  //for each state in the NFA
@@ -210,6 +142,7 @@ int main() {
 		nfaTable.push_back(temp1);
 	}
 
+	cout << "\nNFA Table\n";
 	printNFA(nfaTable);
 
 	vector<vector<vector<int>>> dfaTable;
@@ -259,5 +192,6 @@ int main() {
 		dfaTable.push_back(temp2);
 	}
 
+	cout << "\nDFA Table\n";
 	printDFA(states, dfaTable);
 }
