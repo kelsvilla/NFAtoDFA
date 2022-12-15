@@ -6,6 +6,7 @@ How to compile:
 On UNT linux machines while in the projects directory please type, 
   - "g++ main.cpp"
   - "./a.out"
+
 Or any c++ compiler of your choice.
 
 For a better idea on how the NFA table should be populated by user input check out this link: https://www.geeksforgeeks.org/conversion-from-nfa-to-dfa/
