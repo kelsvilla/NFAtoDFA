@@ -139,10 +139,30 @@ void printDFA(vector<vector<int>>, vector<vector<vector<int>>> table){
 };
 
 vector<int> conversion(int x,vector<vector<vector<int> > > table){
-	vector<int> dfaTable;
+	vector<int> dfaTable; //creation of the DFA table
 	queue<int> queue;
 	
-	return dfaTable;
+	dfaTable.push_back(x); // Pushing the the table with passed value
+
+	for(int i=0; i<table[x][table[x].size()-1].size(); i++) //for every spot in the passed table, add the value to the queue
+		queue.push(dfaTable[i]);
+	
+	while(queue.size() != 0){ //While the queue is not empty, check to see if the table in the given spot is empty. If it is not, traverse the queue and find this table value in the table.
+								// If it is the end of the table, push value into the table. Then push value into the queue
+		int z = queue.front();
+		queue.pop(); // remove the front of the queue for the next cycle
+
+			if(table[z][table[z].size()-1].size() != 0){ 
+				for(int i=0; i<table[z][table[z].size()-1].size(); i++){
+					if(find(dfaTable.begin(), dfaTable.end(), table[z][table[z].size()-1][i])==dfaTable.end()){
+						dfaTable.push_back(table[z][table[z].size()-1][i]);
+						queue.push(table[z][table[z].size()-1][i]);
+					}
+				}
+			}
+	}
+
+	return dfaTable; //return conversion
 }
 
 int main() {
