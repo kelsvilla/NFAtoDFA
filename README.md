@@ -1,4 +1,4 @@
-# NFAtoDFA
+# NFA to DFA
 ## Group Members: Dylan Windebank, Jared Edge, Kelsee Villareal
 Description: Using c++, utilize 3d integer vectors to convert a prompted NFA table into a DFA table. 
 
