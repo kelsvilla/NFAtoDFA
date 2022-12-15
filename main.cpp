@@ -61,7 +61,7 @@ vector<string> DFAStates(vector<vector<vector<string>>> table, vector<string> st
 
 	cout << "DFA STATES\n";
     for(int i=0; i<DFAStates.size(); i++)
-			cout << DFAStates[i]<< endl << endl;
+			cout << DFAStates[i]<< endl;
 
 	return DFAStates;
 }
@@ -88,7 +88,7 @@ void printDFA(vector<vector<vector<string>>> table, vector<string> DFAStates, in
 						for (int n = 0; n < table.at(k).at(l).at(m).size(); n++)
 						if (DFAStates.at(i).at(j) == table.at(k).at(l).at(m).at(n))
 						{
-							cout << table.at(k).at(l).at(m).at(n) << "\t|";
+							
 						}
 					}
 				}
@@ -126,10 +126,20 @@ int main(){
 		//for loop for inputs of table
 		for(j = 0; j < alphabetN; j++){
 			vector<string> temp2;
-			cout << "Enter the output states for input " << alphabet.at(j) << " of state " << state << " (if there are no output states, type '-', if there are multiple, type in the form 'AB'): \n";
-			cin >> outputState;
-			temp2.push_back(outputState);
-			temp1.push_back(temp2);
+			cout << "Enter the # of output states for input "<< alphabet.at(j) << " of state " << state << ": ";
+			cin >> outputStateN;
+			cout << "Enter the output states for input " << alphabet.at(j) << " of state " << state << " (if there are no output states, type '-'): \n";
+
+			if(outputStateN == 0){
+					outputStateN+=1;
+			}
+
+			//for loop for the output state(s) of inputs
+			for(k=0;k<outputStateN;k++){
+				cin >> outputState;
+				temp2.push_back(outputState);
+			}
+				temp1.push_back(temp2);
 		}
 		table.push_back(temp1);
 	}
